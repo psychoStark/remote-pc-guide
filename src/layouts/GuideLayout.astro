@@ -1,0 +1,13 @@
+---
+import BaseLayout from './BaseLayout.astro';
+const { entry } = Astro.props;
+---
+<BaseLayout title={entry.data.title}>
+  <main class="max-w-2xl mx-auto px-6 py-10" transition:animate="slide">
+    <p class="text-sm opacity-60 uppercase tracking-wide">{entry.data.section}</p>
+    <h1 class="text-3xl font-bold mt-1 mb-6" transition:name={`title-${entry.id}`}>
+      {entry.data.title}
+    </h1>
+    <slot />
+  </main>
+</BaseLayout>

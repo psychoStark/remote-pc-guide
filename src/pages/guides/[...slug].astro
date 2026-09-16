@@ -1,0 +1,17 @@
+---
+import { getCollection, render } from 'astro:content';
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import OSPicker from '../../islands/OSPicker.tsx';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides');
+  return guides.map(g => ({ params: { slug: g.id }, props: { entry: g } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+<GuideLayout entry={entry}>
+  {entry.data.interactive === 'os-picker' && <OSPicker client:visible />}
+  <Content />
+</GuideLayout>

@@ -1,17 +1,69 @@
 ---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
+const guides = (await getCollection('guides')).sort((a, b) => a.data.order - b.data.order);
+const sectionLabels = {
+	network: 'Network',
+	routing: 'Routing',
+	stream: 'Streaming',
+	hardmod: 'Hardware fallback',
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Remote PC Guide">
+	<main class="min-h-screen overflow-hidden">
+		<section class="border-b border-black/10 bg-[#17232b] text-[#f6f1e8]">
+			<div class="mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-[1.2fr_0.8fr] md:px-10 md:py-28">
+				<div>
+					<p class="mb-5 text-sm font-semibold uppercase tracking-[0.22em] text-[#f0a35b]">Remote PC Guide</p>
+					<h1 class="max-w-3xl text-5xl font-bold leading-[0.98] tracking-tight md:text-7xl">
+						Your PC, wherever you are.
+					</h1>
+					<p class="mt-7 max-w-xl text-lg leading-8 text-[#c9d0d2]">
+						A practical path from secure networking to low-latency streaming, wake-on-LAN, and a hardware backup when software gives up.
+					</p>
+					<a
+						href={`${import.meta.env.BASE_URL}/guides/${guides[0].id}/`}
+						class="mt-9 inline-flex items-center gap-3 bg-[#f0a35b] px-5 py-3 font-semibold text-[#17232b] transition hover:bg-[#ffc27d]"
+					>
+						Start the guide <span aria-hidden="true">→</span>
+					</a>
+				</div>
+				<div class="flex items-end md:justify-end">
+					<div class="max-w-sm border-l-2 border-[#f0a35b] pl-6 text-sm leading-7 text-[#c9d0d2]">
+						<p class="font-semibold text-[#f6f1e8]">The reliable route</p>
+						<p class="mt-2">Build the connection first. Add streaming second. Keep a physical fallback ready for the day your PC refuses to cooperate.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20">
+			<div class="mb-10 flex items-end justify-between gap-6">
+				<div>
+					<p class="text-sm font-semibold uppercase tracking-[0.18em] text-[#b76532]">The path</p>
+					<h2 class="mt-2 text-3xl font-bold tracking-tight text-[#17232b] md:text-4xl">Seven focused steps</h2>
+				</div>
+				<p class="hidden max-w-xs text-right text-sm leading-6 text-black/55 md:block">Follow in order for the smoothest setup.</p>
+			</div>
+
+			<div class="grid gap-4 md:grid-cols-2">
+				{guides.map((guide) => (
+					<a
+						href={`${import.meta.env.BASE_URL}/guides/${guide.id}/`}
+						class="group border border-black/10 bg-white p-6 transition hover:-translate-y-1 hover:border-[#b76532] hover:shadow-[6px_6px_0_#f0a35b]"
+					>
+						<div class="flex items-start justify-between gap-4">
+							<span class="text-sm font-bold text-[#b76532]">0{guide.data.order}</span>
+							<span class="text-xs font-semibold uppercase tracking-[0.14em] text-black/45">{sectionLabels[guide.data.section]}</span>
+						</div>
+						<h3 class="mt-8 text-xl font-bold text-[#17232b] group-hover:text-[#b76532]">{guide.data.title}</h3>
+						<p class="mt-3 max-w-lg text-sm leading-6 text-black/60">{guide.data.description}</p>
+						<span class="mt-6 inline-block text-sm font-semibold text-[#17232b]">Open step <span aria-hidden="true">↗</span></span>
+					</a>
+				))}
+			</div>
+		</section>
+	</main>
+</BaseLayout>

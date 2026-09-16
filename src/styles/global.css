@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+:root {
+  --surface: #fdfbff;
+  --on-surface: #1b1b1f;
+  --primary: #6750a4;
+  --radius-lg: 24px;
+}
+:root.dark {
+  --surface: #131316;
+  --on-surface: #e4e1e6;
+  --primary: #cfbcff;
+}

@@ -1,43 +1,30 @@
-# Astro Starter Kit: Minimal
+# Remote PC Guide
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Access and stream your home PC from anywhere with a secure, low-latency setup.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Visit the Guide
 
-## 🚀 Project Structure
+Read the complete guide at [psychostark.github.io/remote-pc-guide](https://psychostark.github.io/remote-pc-guide/).
 
-Inside of your Astro project, you'll see the following folders and files:
+## What You Will Set Up
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+- A private device network with Tailscale
+- A subnet node for reaching your home network
+- Wake-on-LAN for starting your PC remotely
+- Sunshine or Apollo for PC streaming
+- Moonlight for connecting from another device
+- An ESP32 SwitchBot as a physical backup
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Recommended Order
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Follow the chapters in order:
 
-Any static assets, like images, can be placed in the `public/` directory.
+1. [Create a Tailscale account](https://psychostark.github.io/remote-pc-guide/guides/01-tailscale-account/)
+2. [Install Tailscale](https://psychostark.github.io/remote-pc-guide/guides/02-tailscale-install/)
+3. [Add a subnet node](https://psychostark.github.io/remote-pc-guide/guides/03-subnet-node/)
+4. [Configure Wake-on-LAN](https://psychostark.github.io/remote-pc-guide/guides/04-wake-on-lan/)
+5. [Configure Sunshine or Apollo](https://psychostark.github.io/remote-pc-guide/guides/05-sunshine-setup/)
+6. [Set up Moonlight](https://psychostark.github.io/remote-pc-guide/guides/06-moonlight-setup/)
+7. [Build the ESP32 hardware fallback](https://psychostark.github.io/remote-pc-guide/guides/07-esp32-switchbot/)
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+By the end, you can wake your computer, connect securely, and stream it from a phone, tablet, or laptop without exposing your home network through router port forwarding.
