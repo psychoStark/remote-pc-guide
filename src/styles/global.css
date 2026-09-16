@@ -1,13 +1,61 @@
 @import "tailwindcss";
 
 :root {
-  --surface: #fdfbff;
-  --on-surface: #1b1b1f;
-  --primary: #6750a4;
+  --surface: #f5f1ea;
+  --surface-strong: #ffffff;
+  --surface-muted: rgba(17, 24, 39, 0.06);
+  --on-surface: #17191d;
+  --on-surface-muted: rgba(23, 25, 29, 0.7);
+  --primary: #b76532;
+  --primary-soft: rgba(183, 101, 50, 0.12);
+  --border: rgba(23, 25, 29, 0.12);
+  --success: #195d4b;
+  --radius-sm: 12px;
+  --radius-md: 16px;
   --radius-lg: 24px;
+  --shadow-soft: 0 12px 30px rgba(15, 23, 42, 0.08);
 }
+
 :root.dark {
-  --surface: #131316;
-  --on-surface: #e4e1e6;
-  --primary: #cfbcff;
+  --surface: #0f1720;
+  --surface-strong: #121d27;
+  --surface-muted: rgba(148, 163, 184, 0.12);
+  --on-surface: #e8edf3;
+  --on-surface-muted: rgba(232, 237, 243, 0.72);
+  --primary: #f0a35b;
+  --primary-soft: rgba(240, 163, 91, 0.12);
+  --border: rgba(148, 163, 184, 0.2);
+  --success: #7dd3b0;
+}
+
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--surface);
+  color: var(--on-surface);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: var(--primary-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

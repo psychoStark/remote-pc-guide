@@ -1,13 +1,45 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import { getGuideEntries, sectionLabels } from '../lib/guides';
+
 const { entry } = Astro.props;
+const guides = await getGuideEntries();
 ---
 <BaseLayout title={entry.data.title}>
-  <main class="max-w-2xl mx-auto px-6 py-10" transition:animate="slide">
-    <p class="text-sm opacity-60 uppercase tracking-wide">{entry.data.section}</p>
-    <h1 class="text-3xl font-bold mt-1 mb-6" transition:name={`title-${entry.id}`}>
-      {entry.data.title}
-    </h1>
-    <slot />
-  </main>
+  <div class="mx-auto max-w-7xl px-4 py-6 md:px-6 lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-8">
+    <aside class="mb-6 lg:mb-0">
+      <div class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-strong)] p-4 shadow-sm lg:sticky lg:top-4">
+        <a href="../../" class="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-[var(--primary)]">
+          <span aria-hidden="true">←</span>
+          Overview
+        </a>
+        <nav aria-label="Guide navigation" class="space-y-2">
+          {guides.map((guide) => (
+            <a
+              href={`../${guide.id}/`}
+              class:list={[
+                'block rounded-full px-3 py-2 text-sm transition',
+                guide.id === entry.id
+                  ? 'bg-[var(--primary-soft)] font-semibold text-[var(--primary)]'
+                  : 'text-[var(--on-surface-muted)] hover:bg-[var(--surface-muted)]',
+              ]}
+            >
+              <span class="mr-2 text-[10px] uppercase tracking-[0.18em]">{String(guide.data.order).padStart(2, '0')}</span>
+              {guide.data.title}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </aside>
+
+    <main class="mx-auto w-full max-w-3xl px-1 py-2 md:px-2" transition:animate="slide">
+      <p class="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--primary)]">{sectionLabels[entry.data.section]}</p>
+      <h1 class="mt-2 text-3xl font-bold tracking-tight md:text-5xl" transition:name={`title-${entry.id}`}>
+        {entry.data.title}
+      </h1>
+      <div class="prose prose-lg mt-6 max-w-none prose-headings:scroll-mt-24 prose-a:text-[var(--primary)]">
+        <slot />
+      </div>
+    </main>
+  </div>
 </BaseLayout>

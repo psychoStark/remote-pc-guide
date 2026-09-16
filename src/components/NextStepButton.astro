@@ -1,0 +1,28 @@
+---
+const { label = 'Next step', href = '/', variant = 'primary' } = Astro.props;
+const isSecondary = variant === 'secondary';
+---
+<a
+  href={href}
+  class:list={[
+    'inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]/50',
+    isSecondary
+      ? 'border border-[var(--border)] bg-transparent text-[var(--on-surface)] hover:bg-[var(--surface-muted)]'
+      : 'bg-[var(--primary)] text-white shadow-sm hover:translate-y-[-1px] hover:shadow-md',
+  ]}
+  data-next-step
+>
+  {label}
+  <span aria-hidden="true">→</span>
+</a>
+
+<script>
+  const buttons = document.querySelectorAll('[data-next-step]');
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+        navigator.vibrate?.(40);
+      }
+    });
+  });
+</script>

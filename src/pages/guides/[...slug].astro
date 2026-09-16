@@ -2,16 +2,55 @@
 import { getCollection, render } from 'astro:content';
 import GuideLayout from '../../layouts/GuideLayout.astro';
 import OSPicker from '../../islands/OSPicker.tsx';
+import { getGuideNavigation, sectionLabels } from '../../lib/guides';
 
 export async function getStaticPaths() {
   const guides = await getCollection('guides');
-  return guides.map(g => ({ params: { slug: g.id }, props: { entry: g } }));
+  return guides.map((g) => ({ params: { slug: g.id }, props: { entry: g } }));
 }
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const navigation = await getGuideNavigation(entry.id);
+const currentGuideNumber = String(entry.data.order).padStart(2, '0');
 ---
 <GuideLayout entry={entry}>
+  <div class="mb-8 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-strong)] p-4 shadow-sm">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--primary)]">
+          {sectionLabels[entry.data.section]}
+        </p>
+        <h2 class="mt-2 text-xl font-bold">Step {currentGuideNumber}: {entry.data.title}</h2>
+      </div>
+      <div class="flex items-center gap-2 text-sm text-[var(--on-surface-muted)]">
+        <span>{entry.data.order} / {navigation.all.length}</span>
+      </div>
+    </div>
+  </div>
+
   {entry.data.interactive === 'os-picker' && <OSPicker client:visible />}
   <Content />
+
+  <nav class="mt-10 flex flex-col gap-3 border-t border-[var(--border)] pt-6 sm:flex-row sm:justify-between">
+    {navigation.previous ? (
+      <a href={`../${navigation.previous.id}/`} class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--on-surface)] hover:bg-[var(--surface-muted)]">
+        <span aria-hidden="true">←</span>
+        Previous
+      </a>
+    ) : (
+      <span />
+    )}
+
+    {navigation.next ? (
+      <a href={`../${navigation.next.id}/`} class="inline-flex items-center gap-2 rounded-full bg-[var(--primary)] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:translate-y-[-1px]">
+        Next step
+        <span aria-hidden="true">→</span>
+      </a>
+    ) : (
+      <a href="../../" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--on-surface)] hover:bg-[var(--surface-muted)]">
+        Back to overview
+      </a>
+    )}
+  </nav>
 </GuideLayout>

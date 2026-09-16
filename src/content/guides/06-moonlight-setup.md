@@ -1,54 +1,51 @@
 ---
-title: "Configure Sunshine / Apollo (Host)"
+title: "Set Up Moonlight on Your Clients"
 section: "stream"
-order: 5
-description: "Set up the low-latency encoding host on your PC."
+order: 6
+description: "Install the client app and pair it to your host for remote streaming."
 ---
 
-## Why We Aren't Using "Original" Sunshine
+## Install the Client App
 
-While the original LizardByte Sunshine project laid the groundwork, the self-hosted streaming community has largely migrated to two powerful forks: **Foundation Sunshine** and **Apollo**. 
+Once the host is ready, the final piece is installing the client that will receive the stream from your PC. The best-supported client is **Moonlight**, which is the official client for Sunshine/Sunshine-based hosts and is lightweight, fast, and easy to set up.
 
-Traditional Sunshine often requires complex scripts and HDMI "dummy plugs" to change your PC's resolution to match your phone or TV. These modern forks include **built-in Virtual Display drivers**. The moment you connect, they generate a synthetic, invisible monitor that automatically perfectly matches your client device's resolution, refresh rate, and HDR capabilities.
+### Available clients
 
----
+- **Moonlight** on Windows, Android, iPhone, and iPad
+- **Artemis** for newer Android or Linux devices if you want a cleaner UI or additional tuning
 
-## Step 1: Choose Your Host Software
-
-Pick the one that best fits your needs. Both are free, open-source, and install identically.
-
-### Option A: Apollo
-*Best for multiple devices and ease of use.*
-Apollo pairs perfectly with the Artemis client. It automatically remembers the resolution of each device you connect (e.g., your Steam Deck vs. your 4K TV) and assigns fixed identities so Windows natively remembers your display layout automatically. 
-* **Download:** [Apollo on GitHub](https://github.com/ClassicOldSong/Apollo)
-
-### Option B: Foundation Sunshine
-*Best for OLED screens and advanced HDR.*
-If you are streaming to high-end HDR devices, Foundation Sunshine is the way to go. It supports both standard HDR10 and HLG encoding at the encoding layer, which maps brightness perfectly to your client's screen, preventing crushed blacks or blown-out highlights. It also supports remote microphone passthrough.
-* **Download:** [Foundation Sunshine on GitHub](https://github.com/AlkaidLab/foundation-sunshine)
+For most users, **Moonlight** is the simplest and most reliable choice.
 
 ---
 
-## Step 2: Installation & The Web UI
+## Step 1: Install Moonlight
 
-Both forks share the same core architecture. 
-
-1. Download the latest Windows `.exe` installer from the Releases page of your chosen project.
-2. Run the installer. **Important:** When prompted, ensure you check the box to install the **Virtual Display Driver** (SudoVDA for Apollo, or ZakoVDD for Foundation).
-3. Once installed, the host runs entirely in the background. It does not have a standard app window.
-4. Open your web browser on the Host PC and navigate to: `https://localhost:47990`.
-5. Your browser will warn you that the connection is not private (because it's a local self-signed certificate). Click **Advanced** and **Proceed to localhost**.
-6. Create a username and password. You will use this to manage your stream settings later.
+1. Download the client from the official app or release page for your device.
+2. Install it on the device you plan to use remotely.
+3. Launch the app after installation.
 
 ---
 
-## Step 3: Enable the Virtual Display
+## Step 2: Pair With Your Host
 
-To make sure your remote sessions are completely independent of your physical monitor:
+1. On your host PC, confirm the Sunshine/Apollo web UI is running and reachable.
+2. Open Moonlight on your client device.
+3. It should automatically detect the host if both devices are on the same Tailscale network.
+4. Select your host and sign in with the credentials you created in the host setup.
 
-1. Log into your new Web UI at `https://localhost:47990`.
-2. Navigate to the **Configuration** tab, then find the **Audio/Video** section.
-3. Enable **Virtual Display** (or **Headless Mode** if you are on a dual-GPU laptop).
-4. Save your settings and restart the host service when prompted.
+If the host does not appear automatically, add it manually with the host's Tailscale IP address and the pairing PIN displayed in the Sunshine/Apollo Web UI.
 
-Your PC is now a low-latency, hardware-accelerated cloud gaming server. It's time to install the client app on your remote devices to complete the connection.
+---
+
+## Step 3: Tweak the Stream for Low Latency
+
+Once connected:
+
+- Use the lowest-latency mode available in Moonlight
+- Prefer a wired connection when possible for faster response
+- Set the display resolution to match your client device
+- Enable hardware acceleration if supported by your GPU
+
+You are now connected to your home PC from anywhere with a secure, low-latency remote session.
+
+The last optional step is adding a hardware fallback if you want a guaranteed way to power the PC on without relying on software wake methods.

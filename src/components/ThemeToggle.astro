@@ -1,0 +1,58 @@
+<script>
+  const STORAGE_KEY = 'remote-pc-theme';
+
+  const applyTheme = (mode) => {
+    const root = document.documentElement;
+    const isDark = mode === 'dark';
+    root.classList.toggle('dark', isDark);
+    root.style.colorScheme = isDark ? 'dark' : 'light';
+    document.body.dataset.theme = mode;
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) metaTheme.setAttribute('content', isDark ? '#0f1720' : '#f5f1ea');
+
+    const toggle = document.querySelector('[data-theme-toggle]');
+    if (toggle) {
+      const label = isDark ? 'Light mode' : 'Dark mode';
+      toggle.setAttribute('aria-label', label);
+      toggle.title = label;
+      toggle.textContent = isDark ? '☀️' : '🌙';
+    }
+
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      navigator.vibrate?.(20);
+    }
+  };
+
+  const initTheme = () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const nextMode = saved || (prefersDark ? 'dark' : 'light');
+    applyTheme(nextMode);
+  };
+
+  const handleToggle = () => {
+    const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    const mode = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem(STORAGE_KEY, mode);
+    applyTheme(mode);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', handleToggle);
+    });
+  } else {
+    initTheme();
+    document.querySelector('[data-theme-toggle]')?.addEventListener('click', handleToggle);
+  }
+</script>
+
+<button
+  type="button"
+  data-theme-toggle
+  aria-label="Toggle color theme"
+  class="fixed right-4 top-4 z-50 inline-flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface-strong)] text-lg shadow-sm transition hover:scale-[1.02]"
+>
+  🌙
+</button>
