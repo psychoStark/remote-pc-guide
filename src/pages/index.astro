@@ -1,108 +1,233 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { sectionLabels } from '../lib/guides';
 
-const guides = (await getCollection('guides')).sort((a, b) => a.data.order - b.data.order);
-const sectionLabels = {
-	network: 'Network',
-	routing: 'Routing',
-	stream: 'Streaming',
-	hardmod: 'Hardware fallback',
-};
+const allGuides = (await getCollection('guides')).sort((a, b) => a.data.order - b.data.order);
+const baseUrl = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+
+const pillars = [
+  {
+    id: 'network',
+    title: '1. Secure Network Mesh',
+    desc: 'Establish an encrypted, zero-config WireGuard mesh between all your devices with no port forwarding.',
+    icon: '🛰️',
+    guides: allGuides.filter((g) => g.data.section === 'network'),
+  },
+  {
+    id: 'routing',
+    title: '2. Subnet Routing & Wake-on-LAN',
+    desc: 'Reach local network devices and wake your PC from sleep or shutdown over the internet.',
+    icon: '🔔',
+    guides: allGuides.filter((g) => g.data.section === 'routing'),
+  },
+  {
+    id: 'stream',
+    title: '3. Ultra-Low Latency Streaming',
+    desc: 'Stream your PC games and desktop at 120+ FPS with virtual display drivers and HDR encoding.',
+    icon: '🎮',
+    guides: allGuides.filter((g) => g.data.section === 'stream'),
+  },
+  {
+    id: 'hardmod',
+    title: '4. Physical Hardware Fail-Safe',
+    desc: 'A dedicated microcontroller actuator to physically press the power button when software methods fail.',
+    icon: '⚡',
+    guides: allGuides.filter((g) => g.data.section === 'hardmod'),
+  },
+];
 ---
 
-<BaseLayout title="Remote PC Guide">
-	<main class="min-h-screen overflow-hidden">
-		<section class="border-b border-black/10 bg-[#17232b] text-[#f6f1e8]">
-			<div class="mx-auto max-w-6xl px-6 py-20 md:px-10 md:py-28">
-				<div class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium tracking-[0.2em] text-[#f0a35b] uppercase">
-					<span aria-hidden="true">⚡</span>
-					Remote PC Guide
-				</div>
-				<div class="grid gap-12 md:grid-cols-[1.2fr_0.8fr]">
-					<div>
-						<h1 class="max-w-3xl text-5xl font-bold leading-[0.98] tracking-tight md:text-7xl">
-							Your PC, wherever you are.
-						</h1>
-						<p class="mt-7 max-w-xl text-lg leading-8 text-[#c9d0d2]">
-							A practical path from secure networking to low-latency streaming, wake-on-LAN, and a hardware backup when software gives up.
-						</p>
-						<div class="mt-9 flex flex-wrap items-center gap-3">
-							<a
-								href={`guides/${guides[0].id}/`}
-								class="inline-flex items-center gap-3 rounded-full bg-[#f0a35b] px-5 py-3 font-semibold text-[#17232b] shadow-lg shadow-[#f0a35b]/20 transition hover:-translate-y-0.5 hover:bg-[#ffc27d]"
-							>
-								Start the guide <span aria-hidden="true">→</span>
-							</a>
-							<div class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-[#dfe7ea]">
-								<span>🛡️</span>
-								Secure
-							</div>
-						</div>
-					</div>
-					<div class="flex items-end md:justify-end">
-						<div class="w-full max-w-sm rounded-[32px] border border-white/10 bg-white/5 p-5 shadow-2xl shadow-[#0b1320]/25 backdrop-blur-sm">
-							<p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#f0a35b]">The reliable route</p>
-							<div class="mt-4 space-y-3 text-sm leading-7 text-[#dfe7ea]">
-								<div class="flex items-center justify-between rounded-2xl bg-white/5 px-3 py-2">
-									<span>1. Secure access</span>
-									<span>🛰️</span>
-								</div>
-								<div class="flex items-center justify-between rounded-2xl bg-white/5 px-3 py-2">
-									<span>2. Wake the PC</span>
-									<span>🔔</span>
-								</div>
-								<div class="flex items-center justify-between rounded-2xl bg-white/5 px-3 py-2">
-									<span>3. Stream it</span>
-									<span>🎮</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
+<BaseLayout
+  title="Remote PC Guide — Modern Low-Latency Streaming & Hardware Stack"
+  description="A complete guide to building a secure, zero-port-forwarding, ultra-low-latency remote PC stack with hardware fallback."
+>
+  <main class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <section class="relative pt-24 pb-20 sm:pt-32 sm:pb-28 border-b border-[var(--border)]">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8">
+        <div class="grid gap-12 lg:grid-cols-[1.2fr_0.8fr] items-center">
+          <div>
+            <!-- Pill Status Badge -->
+            <div class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-container)] px-3.5 py-1.5 text-xs font-semibold tracking-wide text-[var(--primary)] backdrop-blur-xl shadow-sm mb-6">
+              <span class="h-2 w-2 rounded-full bg-[var(--secondary)] animate-pulse"></span>
+              <span>Complete Hardware & Software Stack</span>
+            </div>
 
-		<section class="mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20">
-			<div class="mb-8 max-w-2xl">
-				<p class="text-sm font-semibold uppercase tracking-[0.18em] text-[#b76532]">The path</p>
-				<h2 class="mt-2 text-3xl font-bold tracking-tight text-[#17232b] md:text-4xl">Build the stack in four stages</h2>
-			</div>
+            <h1 class="text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl text-[var(--on-surface)] leading-[1.05]">
+              Your PC. <br />
+              <span class="bg-gradient-to-r from-[var(--primary)] via-violet-400 to-[var(--secondary)] bg-clip-text text-transparent">
+                Everywhere you go.
+              </span>
+            </h1>
 
-			<div class="grid gap-4 md:grid-cols-2">
-				<a href="guides/01-tailscale-account/" class="group rounded-[var(--radius-lg)] border border-black/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-					<div class="flex items-center justify-between gap-4">
-						<p class="text-xs font-semibold uppercase tracking-[0.14em] text-black/45">01 — Network</p>
-						<span class="rounded-full bg-[#f0a35b]/10 px-2 py-1 text-xs font-medium text-[#b76532]">🛰️</span>
-					</div>
-					<h3 class="mt-4 text-xl font-bold text-[#17232b] group-hover:text-[#b76532]">Secure access</h3>
-					<p class="mt-3 text-sm leading-6 text-black/60">Create a Tailscale tailnet and install it on every device that needs to reach your home PC.</p>
-				</a>
-				<a href="guides/03-subnet-node/" class="group rounded-[var(--radius-lg)] border border-black/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-					<div class="flex items-center justify-between gap-4">
-						<p class="text-xs font-semibold uppercase tracking-[0.14em] text-black/45">02 — Routing</p>
-						<span class="rounded-full bg-[#f0a35b]/10 px-2 py-1 text-xs font-medium text-[#b76532]">🔔</span>
-					</div>
-					<h3 class="mt-4 text-xl font-bold text-[#17232b] group-hover:text-[#b76532]">Wake and reach</h3>
-					<p class="mt-3 text-sm leading-6 text-black/60">Add a subnet node and enable Wake-on-LAN so your PC can be reached or powered on from anywhere.</p>
-				</a>
-				<a href="guides/05-sunshine-setup/" class="group rounded-[var(--radius-lg)] border border-black/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-					<div class="flex items-center justify-between gap-4">
-						<p class="text-xs font-semibold uppercase tracking-[0.14em] text-black/45">03 — Streaming</p>
-						<span class="rounded-full bg-[#f0a35b]/10 px-2 py-1 text-xs font-medium text-[#b76532]">🎮</span>
-					</div>
-					<h3 class="mt-4 text-xl font-bold text-[#17232b] group-hover:text-[#b76532]">Low-latency control</h3>
-					<p class="mt-3 text-sm leading-6 text-black/60">Run Sunshine or Apollo on the host and Moonlight on the client for smooth remote gaming and desktop access.</p>
-				</a>
-				<a href="guides/07-esp32-switchbot/" class="group rounded-[var(--radius-lg)] border border-black/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-					<div class="flex items-center justify-between gap-4">
-						<p class="text-xs font-semibold uppercase tracking-[0.14em] text-black/45">04 — Backup</p>
-						<span class="rounded-full bg-[#f0a35b]/10 px-2 py-1 text-xs font-medium text-[#b76532]">🛠️</span>
-					</div>
-					<h3 class="mt-4 text-xl font-bold text-[#17232b] group-hover:text-[#b76532]">Physical fallback</h3>
-					<p class="mt-3 text-sm leading-6 text-black/60">If remote wake fails, use a simple ESP32 SwitchBot setup to press the power button without touching the machine.</p>
-				</a>
-			</div>
-		</section>
-	</main>
+            <p class="mt-6 text-base sm:text-lg leading-relaxed text-[var(--on-surface-variant)] max-w-xl">
+              Turn your desktop into a personal cloud powerhouse. Stream games at 120 FPS, wake sleeping hardware remotely, and eliminate router port forwarding with an encrypted WireGuard mesh.
+            </p>
+
+            <div class="mt-9 flex flex-wrap items-center gap-4">
+              <a
+                href={`${baseUrl}guides/${allGuides[0].id}/`}
+                class="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[var(--primary)] to-violet-600 px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-[var(--primary)]/25 hover:shadow-[var(--primary)]/40 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 specular-highlight"
+              >
+                <span>Start the Guide</span>
+                <span aria-hidden="true">→</span>
+              </a>
+
+              <a
+                href="#roadmap"
+                class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-container)] px-5 py-3.5 text-sm font-medium text-[var(--on-surface)] hover:bg-[var(--surface-container-high)] hover:border-[var(--border-strong)] active:scale-95 transition-all duration-300"
+              >
+                <span>View Roadmap ({allGuides.length} Steps)</span>
+                <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+
+            <!-- Value Chips (Rounded-Full Pills) -->
+            <div class="mt-10 flex flex-wrap gap-2.5 text-xs">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-[var(--surface-container)] border border-[var(--border)] px-3 py-1 text-[var(--on-surface-variant)]">
+                <span class="text-[var(--secondary)]">✓</span> Zero Port Forwarding
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-[var(--surface-container)] border border-[var(--border)] px-3 py-1 text-[var(--on-surface-variant)]">
+                <span class="text-[var(--secondary)]">✓</span> &lt;15ms Glass Latency
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-[var(--surface-container)] border border-[var(--border)] px-3 py-1 text-[var(--on-surface-variant)]">
+                <span class="text-[var(--secondary)]">✓</span> Physical HW Fail-Safe
+              </span>
+            </div>
+          </div>
+
+          <!-- Interactive Stack Architecture Card (Liquid Glass & M3 Rounded-3xl) -->
+          <div class="flex justify-center lg:justify-end">
+            <div class="w-full max-w-md rounded-3xl border border-[var(--border)] bg-[var(--surface-container)]/90 p-6 shadow-2xl shadow-black/20 backdrop-blur-2xl transition-all duration-300 specular-highlight">
+              <div class="flex items-center justify-between border-b border-[var(--border)] pb-4 mb-5">
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-widest text-[var(--primary)]">Architecture Overview</span>
+                  <h2 class="text-base font-bold text-[var(--on-surface)]">The Connected Mesh</h2>
+                </div>
+                <span class="flex h-3 w-3 relative">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+              </div>
+
+              <div class="space-y-3">
+                <div class="flex items-center justify-between rounded-2xl bg-[var(--surface-container-high)]/80 p-3.5 border border-[var(--border)]">
+                  <div class="flex items-center gap-3">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-violet-500/15 text-sm text-[var(--primary)]">🛰️</span>
+                    <div>
+                      <div class="text-xs font-semibold text-[var(--on-surface)]">Mesh Security</div>
+                      <div class="text-[11px] text-[var(--on-surface-muted)]">Tailscale WireGuard</div>
+                    </div>
+                  </div>
+                  <span class="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-400">P2P Ready</span>
+                </div>
+
+                <div class="flex items-center justify-between rounded-2xl bg-[var(--surface-container-high)]/80 p-3.5 border border-[var(--border)]">
+                  <div class="flex items-center gap-3">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/15 text-sm text-blue-400">🔔</span>
+                    <div>
+                      <div class="text-xs font-semibold text-[var(--on-surface)]">Remote Wake</div>
+                      <div class="text-[11px] text-[var(--on-surface-muted)]">Magic Packet via Subnet</div>
+                    </div>
+                  </div>
+                  <span class="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-400">Enabled</span>
+                </div>
+
+                <div class="flex items-center justify-between rounded-2xl bg-[var(--surface-container-high)]/80 p-3.5 border border-[var(--border)]">
+                  <div class="flex items-center gap-3">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-purple-500/15 text-sm text-purple-400">🎮</span>
+                    <div>
+                      <div class="text-xs font-semibold text-[var(--on-surface)]">Stream Engine</div>
+                      <div class="text-[11px] text-[var(--on-surface-muted)]">Sunshine / Apollo + Moonlight</div>
+                    </div>
+                  </div>
+                  <span class="rounded-full bg-violet-500/15 border border-violet-500/30 px-2.5 py-0.5 text-[10px] font-semibold text-[var(--primary)]">120 FPS HDR</span>
+                </div>
+
+                <div class="flex items-center justify-between rounded-2xl bg-[var(--surface-container-high)]/80 p-3.5 border border-[var(--border)]">
+                  <div class="flex items-center gap-3">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/15 text-sm text-emerald-400">⚡</span>
+                    <div>
+                      <div class="text-xs font-semibold text-[var(--on-surface)]">Hardware Fallback</div>
+                      <div class="text-[11px] text-[var(--on-surface-muted)]">ESP32 Servo Actuator</div>
+                    </div>
+                  </div>
+                  <span class="rounded-full bg-white/10 border border-white/20 px-2.5 py-0.5 text-[10px] font-semibold text-[var(--on-surface)]">Standby</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive Roadmap Section (All 7 Guides) -->
+    <section id="roadmap" class="mx-auto max-w-6xl px-5 py-20 sm:px-8">
+      <div class="max-w-2xl mb-14">
+        <span class="text-xs font-bold uppercase tracking-widest text-[var(--primary)]">Step-by-Step Path</span>
+        <h2 class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl text-[var(--on-surface)]">
+          Complete 4-Stage Setup Guide
+        </h2>
+        <p class="mt-3 text-sm sm:text-base text-[var(--on-surface-muted)] leading-relaxed">
+          Follow each step sequentially. Every phase builds upon the previous one to deliver seamless remote productivity and cloud gaming.
+        </p>
+      </div>
+
+      <div class="space-y-12">
+        {pillars.map((pillar) => (
+          <div class="rounded-3xl border border-[var(--border)] bg-[var(--surface-container)]/60 p-6 sm:p-8 backdrop-blur-xl transition-all duration-300">
+            <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[var(--border)]">
+              <div>
+                <div class="flex items-center gap-2.5">
+                  <span class="text-xl">{pillar.icon}</span>
+                  <h3 class="text-lg sm:text-xl font-bold text-[var(--on-surface)]">{pillar.title}</h3>
+                </div>
+                <p class="mt-1 text-xs sm:text-sm text-[var(--on-surface-muted)]">{pillar.desc}</p>
+              </div>
+              <span class="rounded-full bg-[var(--surface-container-high)] px-3 py-1 text-xs font-medium text-[var(--on-surface-variant)]">
+                {pillar.guides.length} {pillar.guides.length === 1 ? 'Step' : 'Steps'}
+              </span>
+            </div>
+
+            <!-- Guide Cards Grid within Pillar -->
+            <div class="grid gap-4 sm:grid-cols-2 mt-6">
+              {pillar.guides.map((guide) => (
+                <a
+                  href={`${baseUrl}guides/${guide.id}/`}
+                  class="group relative flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--surface-container-high)]/70 p-5 transition-all duration-200 hover:-translate-y-1 hover:border-[var(--primary)]/40 hover:bg-[var(--surface-container-highest)] hover:shadow-lg active:scale-98"
+                >
+                  <div>
+                    <div class="flex items-center justify-between text-xs text-[var(--on-surface-muted)] mb-3">
+                      <span class="font-mono font-semibold text-[var(--primary)]">
+                        Step {String(guide.data.order).padStart(2, '0')}
+                      </span>
+                      <span class="rounded-full bg-[var(--surface-container)] px-2 py-0.5 text-[10px] uppercase tracking-wider font-semibold text-[var(--on-surface-variant)]">
+                        {sectionLabels[guide.data.section as keyof typeof sectionLabels]}
+                      </span>
+                    </div>
+
+                    <h4 class="text-base font-bold text-[var(--on-surface)] group-hover:text-[var(--primary)] transition-colors">
+                      {guide.data.title}
+                    </h4>
+
+                    {guide.data.description && (
+                      <p class="mt-2 text-xs sm:text-sm text-[var(--on-surface-muted)] line-clamp-2 leading-relaxed">
+                        {guide.data.description}
+                      </p>
+                    )}
+                  </div>
+
+                  <div class="mt-5 flex items-center gap-1 text-xs font-semibold text-[var(--primary)]">
+                    <span>Read guide</span>
+                    <span class="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">→</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
 </BaseLayout>

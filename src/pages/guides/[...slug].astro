@@ -2,7 +2,8 @@
 import { getCollection, render } from 'astro:content';
 import GuideLayout from '../../layouts/GuideLayout.astro';
 import OSPicker from '../../islands/OSPicker.tsx';
-import { getGuideNavigation, sectionLabels } from '../../lib/guides';
+import LatencyCalculator from '../../islands/LatencyCalculator.tsx';
+import { getGuideNavigation } from '../../lib/guides';
 
 export async function getStaticPaths() {
   const guides = await getCollection('guides');
@@ -12,45 +13,87 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const navigation = await getGuideNavigation(entry.id);
-const currentGuideNumber = String(entry.data.order).padStart(2, '0');
+const baseUrl = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+
+const hasPlatforms = Boolean(entry.data.platforms && Object.keys(entry.data.platforms).length > 0);
+const showOSPicker = hasPlatforms || entry.data.interactive === 'os-picker';
+const showLatencyCalc = entry.data.interactive === 'latency-calculator';
 ---
+
 <GuideLayout entry={entry}>
-  <div class="mb-8 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-strong)] p-4 shadow-sm">
-    <div class="flex flex-wrap items-center justify-between gap-3">
-      <div>
-        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--primary)]">
-          {sectionLabels[entry.data.section]}
-        </p>
-        <h2 class="mt-2 text-xl font-bold">Step {currentGuideNumber}: {entry.data.title}</h2>
-      </div>
-      <div class="flex items-center gap-2 text-sm text-[var(--on-surface-muted)]">
-        <span>{entry.data.order} / {navigation.all.length}</span>
-      </div>
-    </div>
+  <!-- Frontmatter-driven OS/Platform Switcher -->
+  {showOSPicker && (
+    <OSPicker client:visible platforms={entry.data.platforms} />
+  )}
+
+  <!-- Markdown Content Body (Isolated inside .guide-content) -->
+  <div class="guide-content max-w-none">
+    <Content />
   </div>
 
-  {entry.data.interactive === 'os-picker' && <OSPicker client:visible />}
-  <Content />
+  <!-- Interactive Latency Calculator (for streaming guide) -->
+  {showLatencyCalc && (
+    <LatencyCalculator client:visible />
+  )}
 
-  <nav class="mt-10 flex flex-col gap-3 border-t border-[var(--border)] pt-6 sm:flex-row sm:justify-between">
-    {navigation.previous ? (
-      <a href={`../${navigation.previous.id}/`} class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--on-surface)] hover:bg-[var(--surface-muted)]">
-        <span aria-hidden="true">←</span>
-        Previous
-      </a>
-    ) : (
-      <span />
-    )}
+  <!-- Bottom Step Navigation Cards (Material You 3 & Liquid Glass) -->
+  <nav aria-label="Step navigation" class="mt-14 border-t border-[var(--border)] pt-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {navigation.previous ? (
+        <a
+          href={`${baseUrl}guides/${navigation.previous.id}/`}
+          class="group flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--surface-container)] p-4 sm:p-5 transition-all duration-300 hover:border-[var(--primary)]/40 hover:bg-[var(--surface-container-high)] hover:-translate-y-0.5 active:scale-[0.99] text-left no-underline"
+        >
+          <div class="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[var(--on-surface-muted)] group-hover:text-[var(--primary)] transition-colors">
+            <span aria-hidden="true">←</span>
+            <span>Previous Step ({String(navigation.previous.data.order).padStart(2, '0')})</span>
+          </div>
+          <div class="mt-2 text-sm sm:text-base font-bold text-[var(--on-surface)] group-hover:text-[var(--primary)] transition-colors line-clamp-1">
+            {navigation.previous.data.title}
+          </div>
+        </a>
+      ) : (
+        <a
+          href={baseUrl}
+          class="group flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--surface-container)] p-4 sm:p-5 transition-all duration-300 hover:border-[var(--primary)]/40 hover:bg-[var(--surface-container-high)] hover:-translate-y-0.5 active:scale-[0.99] text-left no-underline"
+        >
+          <div class="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[var(--on-surface-muted)] group-hover:text-[var(--primary)] transition-colors">
+            <span aria-hidden="true">←</span>
+            <span>Architecture Overview</span>
+          </div>
+          <div class="mt-2 text-sm sm:text-base font-bold text-[var(--on-surface)] group-hover:text-[var(--primary)] transition-colors">
+            Back to Complete Roadmap
+          </div>
+        </a>
+      )}
 
-    {navigation.next ? (
-      <a href={`../${navigation.next.id}/`} class="inline-flex items-center gap-2 rounded-full bg-[var(--primary)] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:translate-y-[-1px]">
-        Next step
-        <span aria-hidden="true">→</span>
-      </a>
-    ) : (
-      <a href="../../" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--on-surface)] hover:bg-[var(--surface-muted)]">
-        Back to overview
-      </a>
-    )}
+      {navigation.next ? (
+        <a
+          href={`${baseUrl}guides/${navigation.next.id}/`}
+          class="group flex flex-col justify-between rounded-2xl border border-[var(--primary)]/30 bg-gradient-to-br from-[var(--surface-container)] to-[var(--primary-soft)] p-4 sm:p-5 transition-all duration-300 hover:border-[var(--primary)] hover:shadow-lg hover:shadow-[var(--primary)]/10 hover:-translate-y-0.5 active:scale-[0.99] text-right sm:items-end no-underline specular-highlight"
+        >
+          <div class="flex items-center justify-end gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[var(--primary)]">
+            <span>Next Step ({String(navigation.next.data.order).padStart(2, '0')})</span>
+            <span aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-1">→</span>
+          </div>
+          <div class="mt-2 text-sm sm:text-base font-bold text-[var(--on-surface)] group-hover:text-[var(--primary-hover)] transition-colors line-clamp-1">
+            {navigation.next.data.title}
+          </div>
+        </a>
+      ) : (
+        <a
+          href={baseUrl}
+          class="group flex flex-col justify-between rounded-2xl border border-[var(--secondary)]/30 bg-gradient-to-br from-[var(--surface-container)] to-[var(--secondary-soft)] p-4 sm:p-5 transition-all duration-300 hover:border-[var(--secondary)] hover:shadow-lg hover:shadow-[var(--secondary)]/10 hover:-translate-y-0.5 active:scale-[0.99] text-right sm:items-end no-underline specular-highlight"
+        >
+          <div class="flex items-center justify-end gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[var(--secondary)]">
+            <span>✓ Complete Stack</span>
+            <span aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-1">→</span>
+          </div>
+          <div class="mt-2 text-sm sm:text-base font-bold text-[var(--on-surface)] group-hover:text-[var(--secondary-hover)] transition-colors">
+            Return to Guide Overview
+          </div>
+        </a>
+      )}
+    </div>
   </nav>
 </GuideLayout>

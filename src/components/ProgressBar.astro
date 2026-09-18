@@ -1,0 +1,35 @@
+---
+interface Props {
+  currentStep: number;
+  totalSteps: number;
+  sectionName?: string;
+}
+
+const { currentStep = 1, totalSteps = 7, sectionName = '' } = Astro.props;
+const percent = Math.round((currentStep / totalSteps) * 100);
+---
+
+<div class="w-full mb-8" data-guide-progress>
+  <!-- Step indicator and percentage -->
+  <div class="flex items-center justify-between text-xs font-medium text-[var(--on-surface-variant)] mb-2 px-1">
+    <div class="flex items-center gap-2">
+      <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full bg-[var(--primary-soft)] text-[var(--primary)] font-semibold uppercase tracking-wider text-[10px]">
+        {sectionName || 'Guide Progress'}
+      </span>
+      <span>Step {currentStep} of {totalSteps}</span>
+    </div>
+    <span class="font-mono text-[var(--primary)] font-semibold">{percent}% completed</span>
+  </div>
+
+  <!-- Progress Track (Rounded Full) -->
+  <div class="h-2 w-full rounded-full bg-[var(--surface-container-high)] overflow-hidden border border-[var(--border)]">
+    <div
+      class="h-full rounded-full bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] transition-all duration-500 ease-out shadow-sm"
+      style={`width: ${percent}%;`}
+      role="progressbar"
+      aria-valuenow={percent}
+      aria-valuemin={0}
+      aria-valuemax={100}
+    ></div>
+  </div>
+</div>

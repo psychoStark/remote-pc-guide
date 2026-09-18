@@ -9,6 +9,16 @@ const guides = defineCollection({
     order: z.number(),
     description: z.string().optional(),
     interactive: z.string().optional(),
+    platforms: z.record(
+      z.string(),
+      z.object({
+        label: z.string(),
+        badge: z.string().optional(),
+        summary: z.string().optional(),
+        code: z.string().optional(),
+        steps: z.array(z.string()),
+      })
+    ).optional(),
   }),
 });
 

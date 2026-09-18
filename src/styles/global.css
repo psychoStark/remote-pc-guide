@@ -1,35 +1,92 @@
 @import "tailwindcss";
 
-:root {
-  --surface: #f5f1ea;
-  --surface-strong: #ffffff;
-  --surface-muted: rgba(17, 24, 39, 0.06);
-  --on-surface: #17191d;
-  --on-surface-muted: rgba(23, 25, 29, 0.7);
-  --primary: #b76532;
-  --primary-soft: rgba(183, 101, 50, 0.12);
-  --border: rgba(23, 25, 29, 0.12);
-  --success: #195d4b;
-  --radius-sm: 12px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --shadow-soft: 0 12px 30px rgba(15, 23, 42, 0.08);
-}
+@layer base {
+  :root {
+    /* Light Mode Tonal Tokens */
+    --surface-base: #f8f9fc;
+    --surface-container-lowest: #ffffff;
+    --surface-container-low: #f3f5fa;
+    --surface-container: #eaedf5;
+    --surface-container-high: #e2e6f0;
+    --surface-container-highest: #d8ddeb;
 
-:root.dark {
-  --surface: #0f1720;
-  --surface-strong: #121d27;
-  --surface-muted: rgba(148, 163, 184, 0.12);
-  --on-surface: #e8edf3;
-  --on-surface-muted: rgba(232, 237, 243, 0.72);
-  --primary: #f0a35b;
-  --primary-soft: rgba(240, 163, 91, 0.12);
-  --border: rgba(148, 163, 184, 0.2);
-  --success: #7dd3b0;
+    --on-surface: #0f141c;
+    --on-surface-variant: #374151;
+    --on-surface-muted: #6b7280;
+
+    /* Accents - Light Mode */
+    --primary: #7c3aed;
+    --primary-hover: #6d28d9;
+    --primary-soft: rgba(124, 58, 237, 0.08);
+    --primary-glow: rgba(124, 58, 237, 0.25);
+    --on-primary: #ffffff;
+
+    --secondary: #059669;
+    --secondary-hover: #047857;
+    --secondary-soft: rgba(5, 150, 105, 0.08);
+    --secondary-glow: rgba(5, 150, 105, 0.25);
+    --on-secondary: #ffffff;
+
+    --border: rgba(15, 20, 28, 0.09);
+    --border-strong: rgba(15, 20, 28, 0.16);
+    --border-specular: rgba(255, 255, 255, 0.85);
+
+    /* Liquid Glass & Shadow */
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(15, 20, 28, 0.08);
+    --glass-shadow: 0 16px 36px -8px rgba(15, 20, 28, 0.06), 0 0 0 1px rgba(15, 20, 28, 0.05);
+
+    /* Consistently Rounded Radii */
+    --radius-3xl: 24px;
+    --radius-2xl: 16px;
+    --radius-xl: 12px;
+    --radius-full: 9999px;
+
+    /* Easing */
+    --ease-m3: cubic-bezier(0.05, 0.7, 0.1, 1.0);
+  }
+
+  :root.dark {
+    /* AMOLED Dark Mode Tonal Tokens */
+    --surface-base: #000000;
+    --surface-container-lowest: #050608;
+    --surface-container-low: #090a10;
+    --surface-container: #11131c;
+    --surface-container-high: #191b26;
+    --surface-container-highest: #222534;
+
+    --on-surface: #f3f4f8;
+    --on-surface-variant: #cbd5e1;
+    --on-surface-muted: #94a3b8;
+
+    /* Accents - AMOLED Dark Mode */
+    --primary: #a855f7;
+    --primary-hover: #c084fc;
+    --primary-soft: rgba(168, 85, 247, 0.14);
+    --primary-glow: rgba(168, 85, 247, 0.35);
+    --on-primary: #ffffff;
+
+    --secondary: #10b981;
+    --secondary-hover: #34d399;
+    --secondary-soft: rgba(16, 185, 129, 0.14);
+    --secondary-glow: rgba(16, 185, 129, 0.35);
+    --on-secondary: #000000;
+
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --border-specular: rgba(255, 255, 255, 0.14);
+
+    /* Liquid Glass & Shadow */
+    --glass-bg: rgba(17, 19, 28, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+  }
 }
 
 html {
-  color-scheme: light;
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 html.dark {
@@ -37,10 +94,16 @@ html.dark {
 }
 
 body {
-  background: var(--surface);
+  background-color: var(--surface-base);
   color: var(--on-surface);
-  font-family: 'Inter', sans-serif;
   min-height: 100vh;
+  letter-spacing: -0.01em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+code, pre, kbd {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 * {
@@ -49,6 +112,271 @@ body {
 
 ::selection {
   background: var(--primary-soft);
+  color: var(--primary);
+}
+
+/* Liquid Glass Cards */
+.liquid-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  box-shadow: var(--glass-shadow);
+}
+
+.specular-highlight {
+  box-shadow: inset 0 1px 0 0 var(--border-specular);
+}
+
+/* Ambient Diffuse Underglows */
+.ambient-glow-violet {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, rgba(168, 85, 247, 0) 70%);
+  filter: blur(60px);
+}
+
+.ambient-glow-green {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.16) 0%, rgba(16, 185, 129, 0) 70%);
+  filter: blur(60px);
+}
+
+/* Custom modern scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--on-surface-muted);
+}
+
+/* ==========================================================================
+   GUIDE CONTENT MARKDOWN FORMATTING & TYPOGRAPHY
+   Restores hierarchy, margins, rounded containers, and crisp layout
+   ========================================================================== */
+.guide-content {
+  color: var(--on-surface-variant);
+  font-size: 0.975rem;
+  line-height: 1.8;
+}
+
+.guide-content h2 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--on-surface);
+  letter-spacing: -0.02em;
+  margin-top: 2.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.guide-content h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--on-surface);
+  letter-spacing: -0.01em;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.guide-content h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--on-surface);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.guide-content p {
+  margin-top: 1rem;
+  margin-bottom: 1.15rem;
+  line-height: 1.8;
+  color: var(--on-surface-variant);
+}
+
+.guide-content strong {
+  color: var(--on-surface);
+  font-weight: 600;
+}
+
+.guide-content em {
+  font-style: italic;
+  color: var(--on-surface-variant);
+}
+
+.guide-content a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]) {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.guide-content a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):hover {
+  color: var(--primary-hover);
+}
+
+/* Lists formatting (restoring bullets and indentation wiped by preflight) */
+.guide-content ul {
+  list-style-type: disc !important;
+  padding-left: 1.75rem !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1.25rem !important;
+}
+
+.guide-content ul ul {
+  list-style-type: circle !important;
+  padding-left: 1.5rem !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.guide-content ol {
+  list-style-type: decimal !important;
+  padding-left: 1.75rem !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1.25rem !important;
+}
+
+.guide-content ol ol {
+  list-style-type: lower-alpha !important;
+  padding-left: 1.5rem !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.guide-content li {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 0.25rem;
+  line-height: 1.75;
+  color: var(--on-surface-variant);
+}
+
+.guide-content li::marker {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* Callout / Blockquote (Material You 3 Card & Liquid Glass) */
+.guide-content blockquote {
+  position: relative;
+  margin: 1.75rem 0;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  background: var(--primary-soft);
+  color: var(--on-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+.guide-content blockquote p {
+  margin: 0;
+  color: var(--on-surface);
+  font-size: 0.925rem;
+  line-height: 1.7;
+}
+
+.guide-content blockquote strong {
+  color: var(--primary);
+}
+
+/* Dividers */
+.guide-content hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+/* Terminal / Code Blocks */
+.guide-content pre {
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border-strong);
+  background-color: #07090e !important;
+  color: #e2e8f0 !important;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 1.75;
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+.guide-content pre code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  border-radius: 0 !important;
+}
+
+/* Inline Code Snippets */
+.guide-content :not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  font-weight: 500;
+  color: var(--primary);
+  background-color: var(--surface-container-high);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.15em 0.45em;
+}
+
+/* Tables */
+.guide-content table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1.75rem 0;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--surface-container);
+}
+
+.guide-content th {
+  background: var(--surface-container-high);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--on-surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.guide-content td {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: var(--on-surface-variant);
+  border-bottom: 1px solid var(--border);
+}
+
+.guide-content tr:last-child td {
+  border-bottom: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

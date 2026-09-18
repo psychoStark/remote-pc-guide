@@ -4,42 +4,80 @@ section: "network"
 order: 2
 description: "Install Tailscale on your PC and every device you'll connect from."
 interactive: "os-picker"
+platforms:
+  windows:
+    label: "Windows"
+    badge: "Host & Client"
+    summary: "Install Tailscale with the official installer or using the Windows Package Manager."
+    code: "winget install --id Tailscale.Tailscale -e"
+    steps:
+      - "Run the installer or execute the winget command above."
+      - "Launch Tailscale from the Windows notification area and log in using your SSO identity provider."
+      - "Verify that your Host PC appears in the Tailscale Admin Console."
+  mac:
+    label: "macOS"
+    badge: "Client"
+    summary: "Install the standalone app from the Mac App Store or using Homebrew."
+    code: "brew install --cask tailscale"
+    steps:
+      - "Install Tailscale via the Mac App Store or Homebrew."
+      - "Launch Tailscale, grant network extension permissions, and sign in."
+      - "Confirm your Mac shows connected to your tailnet."
+  linux:
+    label: "Linux"
+    badge: "Host / Subnet"
+    summary: "One-line automated installation script for all major Linux distributions."
+    code: "curl -fsSL https://tailscale.com/install.sh | sh"
+    steps:
+      - "Run the official one-line install script in your terminal."
+      - "Authenticate and connect by running: sudo tailscale up"
+      - "Verify that your machine gets assigned a 100.x.y.z IP address."
+  android:
+    label: "Android"
+    badge: "Mobile"
+    summary: "Official high-performance mobile client available on Google Play."
+    steps:
+      - "Install the Tailscale app from the Google Play Store."
+      - "Sign in with the same SSO provider account."
+      - "Toggle the connection switch on to join your private mesh."
+  ios:
+    label: "iOS / iPadOS"
+    badge: "Mobile"
+    summary: "Native iOS client with on-demand VPN tunnel support."
+    steps:
+      - "Download Tailscale from the Apple App Store."
+      - "Sign in and allow iOS to install the WireGuard VPN configuration profile."
+      - "Toggle the VPN switch to connect to your PC remotely."
 ---
-
-Pick your platform below for exact install steps.
-
-*(The interactive OS picker will be rendered here automatically)*
 
 ## 1. Connect the Host PC
 
-Your Host PC is the heavy-lifter you want to access remotely. After following the installation step from the picker above:
+Your Host PC is the primary gaming or workstation machine you want to access remotely. Use the interactive platform selector above to install Tailscale for your operating system.
 
-1. Launch Tailscale on your machine.
+Once installed:
+1. Launch Tailscale on your host machine.
 2. It will open a browser window requesting authentication.
-3. Log in using the exact same identity provider you used to create your account.
+3. Log in using the exact same identity provider you used in Step 1.
 
-Your PC is now part of your secure mesh network (your "tailnet"). 
+Your PC is now part of your secure mesh network (your "tailnet") and receives a dedicated, static Tailscale IP address (typically `100.x.y.z`).
 
 ---
 
 ## 2. Connect Your Client Devices
 
-Clients are the devices you'll use while you are away (like your phone, tablet, or a thin-and-light laptop).
+Clients are the devices you will use when away from home—your laptop, smartphone, iPad, or Steam Deck. 
 
-* **Android:** Download Tailscale from the Google Play Store.
-* **iOS / iPadOS:** Download Tailscale from the Apple App Store.
-
-Install the app, open it, and log in with your account. You will immediately see your Host PC listed on the screen along with its dedicated Tailscale IP address (which always starts with `100.x.x.x`). 
+Install the Tailscale client on each device and log in with the identical SSO account. Within seconds, all your machines will discover each other over an end-to-end encrypted WireGuard tunnel without needing any router port forwarding.
 
 ---
 
-## 3. Crucial: Disable Key Expiry
+## 3. Crucial: Disable Key Expiry on the Host
 
-For security, Tailscale requires devices to re-authenticate every 180 days by default. If your Host PC's key expires while you are traveling, you will be locked out until you get back home. We need to disable this for the Host.
+By default, Tailscale requires devices to re-authenticate every 180 days for security. If your Host PC's key expires while you are traveling, you will be locked out until you get back home. We need to disable key expiry for the Host.
 
-1. Go to the [Tailscale Admin Console](https://login.tailscale.com/admin/machines) on the web.
-2. Locate your **Host PC** in your machines list.
+1. Open the [Tailscale Admin Console](https://login.tailscale.com/admin/machines) in your web browser.
+2. Locate your **Host PC** in the machines list.
 3. Click the three-dot menu icon (`...`) on the far right of its row.
 4. Select **Disable key expiry**.
 
-Your devices can now securely communicate from anywhere in the world. Next, we will set up a subnet node so you can wake your PC from sleep remotely.
+Your host machine will now stay continuously reachable on your tailnet indefinitely. Next, we will configure a subnet router so you can reach sleeping devices and smart home hardware.

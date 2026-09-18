@@ -1,58 +1,98 @@
-<script>
-  const STORAGE_KEY = 'remote-pc-theme';
-
-  const applyTheme = (mode) => {
-    const root = document.documentElement;
-    const isDark = mode === 'dark';
-    root.classList.toggle('dark', isDark);
-    root.style.colorScheme = isDark ? 'dark' : 'light';
-    document.body.dataset.theme = mode;
-    const metaTheme = document.querySelector('meta[name="theme-color"]');
-    if (metaTheme) metaTheme.setAttribute('content', isDark ? '#0f1720' : '#f5f1ea');
-
-    const toggle = document.querySelector('[data-theme-toggle]');
-    if (toggle) {
-      const label = isDark ? 'Light mode' : 'Dark mode';
-      toggle.setAttribute('aria-label', label);
-      toggle.title = label;
-      toggle.textContent = isDark ? '☀️' : '🌙';
-    }
-
-    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
-      navigator.vibrate?.(20);
-    }
-  };
-
-  const initTheme = () => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const nextMode = saved || (prefersDark ? 'dark' : 'light');
-    applyTheme(nextMode);
-  };
-
-  const handleToggle = () => {
-    const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-    const mode = current === 'dark' ? 'light' : 'dark';
-    localStorage.setItem(STORAGE_KEY, mode);
-    applyTheme(mode);
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      initTheme();
-      document.querySelector('[data-theme-toggle]')?.addEventListener('click', handleToggle);
-    });
-  } else {
-    initTheme();
-    document.querySelector('[data-theme-toggle]')?.addEventListener('click', handleToggle);
-  }
-</script>
+---
+// ThemeToggle.astro - Streamlined M3 & Liquid Glass Theme Switcher with Resilient Transitions
+---
 
 <button
   type="button"
+  id="theme-toggle-btn"
   data-theme-toggle
-  aria-label="Toggle color theme"
-  class="fixed right-4 top-4 z-50 inline-flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface-strong)] text-lg shadow-sm transition hover:scale-[1.02]"
+  aria-label="Toggle color scheme"
+  class="fixed top-5 right-5 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface-container)]/80 text-[var(--on-surface)] shadow-lg shadow-black/5 backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:border-[var(--primary)]/40 hover:bg-[var(--surface-container-high)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]"
 >
-  🌙
+  <!-- Sun Icon (shown in dark mode to switch to light) -->
+  <svg
+    class="h-5 w-5 rotate-0 scale-100 transition-transform duration-300 dark:-rotate-90 dark:scale-0 text-amber-500"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2"></path>
+    <path d="M12 20v2"></path>
+    <path d="m4.93 4.93 1.41 1.41"></path>
+    <path d="m17.66 17.66 1.41 1.41"></path>
+    <path d="M2 12h2"></path>
+    <path d="M20 12h2"></path>
+    <path d="m6.34 17.66-1.41 1.41"></path>
+    <path d="m19.07 4.93-1.41 1.41"></path>
+  </svg>
+
+  <!-- Moon Icon (shown in light mode to switch to dark) -->
+  <svg
+    class="absolute h-5 w-5 rotate-90 scale-0 transition-transform duration-300 dark:rotate-0 dark:scale-100 text-purple-400"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+  </svg>
 </button>
+
+<script>
+  import { triggerHaptic } from '../lib/haptics';
+
+  const STORAGE_KEY = 'remote-pc-theme';
+
+  function updateMeta(isDark: boolean) {
+    const meta = document.getElementById('meta-theme-color');
+    if (meta) {
+      meta.setAttribute('content', isDark ? '#000000' : '#f8f9fc');
+    }
+  }
+
+  function setMode(mode: 'dark' | 'light') {
+    const isDark = mode === 'dark';
+    document.documentElement.classList.toggle('dark', isDark);
+    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+    localStorage.setItem(STORAGE_KEY, mode);
+    updateMeta(isDark);
+  }
+
+  function syncCurrentTheme() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    let mode: 'dark' | 'light';
+    if (saved === 'dark' || saved === 'light') {
+      mode = saved;
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+      mode = 'light';
+    } else {
+      mode = 'dark';
+    }
+    setMode(mode);
+  }
+
+  // Handle clicks via event delegation on document so it persists across View Transitions
+  document.addEventListener('click', (e) => {
+    const target = (e.target as HTMLElement)?.closest('[data-theme-toggle]');
+    if (!target) return;
+
+    triggerHaptic('selection');
+    const isCurrentlyDark = document.documentElement.classList.contains('dark');
+    const nextMode = isCurrentlyDark ? 'light' : 'dark';
+    setMode(nextMode);
+  });
+
+  // Keep theme synced on initial page load and after every View Transition swap
+  document.addEventListener('astro:page-load', syncCurrentTheme);
+  document.addEventListener('astro:after-swap', syncCurrentTheme);
+</script>
