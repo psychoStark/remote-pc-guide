@@ -43,7 +43,7 @@ const isSecondary = variant === 'secondary';
     const buttons = document.querySelectorAll('[data-next-step]');
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
-        triggerHaptic('light');
+        triggerHaptic('navigation');
       });
     });
   }

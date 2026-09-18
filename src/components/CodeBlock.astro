@@ -50,7 +50,7 @@ const { code = '', language = 'bash', filename = '' } = Astro.props;
         if (!text) return;
         try {
           await navigator.clipboard.writeText(text);
-          triggerHaptic('success');
+          triggerHaptic('copy');
           const label = btn.querySelector('.copy-label');
           if (label) label.textContent = 'Copied!';
           btn.classList.add('text-emerald-400');

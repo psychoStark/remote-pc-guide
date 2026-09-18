@@ -68,6 +68,7 @@ const pillars = [
             <div class="mt-9 flex flex-wrap items-center gap-4">
               <a
                 href={`${baseUrl}guides/${allGuides[0].id}/`}
+                data-haptic="navigation"
                 class="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[var(--primary)] to-violet-600 px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-[var(--primary)]/25 hover:shadow-[var(--primary)]/40 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 specular-highlight"
               >
                 <span>Start the Guide</span>
@@ -76,6 +77,7 @@ const pillars = [
 
               <a
                 href="#roadmap"
+                data-haptic="tick"
                 class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-container)] px-5 py-3.5 text-sm font-medium text-[var(--on-surface)] hover:bg-[var(--surface-container-high)] hover:border-[var(--border-strong)] active:scale-95 transition-all duration-300"
               >
                 <span>View Roadmap ({allGuides.length} Steps)</span>
@@ -195,6 +197,7 @@ const pillars = [
               {pillar.guides.map((guide) => (
                 <a
                   href={`${baseUrl}guides/${guide.id}/`}
+                  data-haptic="navigation"
                   class="group relative flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--surface-container-high)]/70 p-5 transition-all duration-200 hover:-translate-y-1 hover:border-[var(--primary)]/40 hover:bg-[var(--surface-container-highest)] hover:shadow-lg active:scale-98"
                 >
                   <div>

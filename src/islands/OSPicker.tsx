@@ -92,7 +92,7 @@ export default function OSPicker({ platforms }: OSPickerProps) {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
-      triggerHaptic('success');
+      triggerHaptic('copy');
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // Fallback
